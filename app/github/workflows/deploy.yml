@@ -1,0 +1,30 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # شاخه اصلی‌تون (اگه master هست، به master تغییر بدید)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # نسخه Node.js که پروژه‌تون استفاده می‌کنه (با نسخه package.json تون مطابقت بدید)
+
+      - name: Install dependencies
+        run: npm ci # نصب وابستگی‌ها
+
+      - name: Build project
+        run: npm run build # ساخت پروژه و تولید پوشه out
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out # پوشه‌ای که باید منتشر بشه
